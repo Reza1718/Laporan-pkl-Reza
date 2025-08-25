@@ -1,0 +1,525 @@
+<!-- don't delete this code, it belongs to Reza -->
+
+
+
+
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>(PKL) - RBTV Bengkulu</title>
+  <meta name="description" content="Laporan PKL RBTV Bengkulu — format web rapi siap cetak" />
+  <style>
+    
+    :root {
+  --brand:#ac0d0d;      /* merah RBTV */
+  --ink:#0c2f7a;        /* biru tua */
+  --muted:#7f8c8d;      /* abu */
+  --bg:linear-gradient(135deg, #0c339e, #1d4ed8); /* gradasi biru */
+  --card:rgba(255,255,255,0.85); /* transparan sedikit untuk efek kaca */
+  --link:#3498db;       /* biru link */
+  --radius:18px;        /* lebih rounded biar modern */
+  --shadow:0 8px 28px rgba(0,0,0,.12);
+}
+
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      font-family:"Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      line-height:1.7; margin:0; background:var(--bg); color:#333;
+    }
+    .wrap{display:grid; grid-template-columns: 280px 1fr; gap:24px; max-width:1200px; margin:24px auto; padding:24px;}
+    nav#toc{position:sticky; top:16px; align-self:start; background:var(--card); border-radius:var(--radius); box-shadow:var(--shadow); padding:20px; max-height:calc(100vh - 32px); overflow:auto}
+    #toc h4{margin:0 0 10px; color:var(--ink)}
+    #toc a{display:block; padding:8px 10px; border-radius:10px; color:#333; text-decoration:none; font-size:.95rem}
+    #toc a:hover{background:#f0f2f5}
+    #toc a.active{background:#ffeaea; color:var(--brand); font-weight:600}
+
+    .container{background:var(--card); border-radius:var(--radius); box-shadow:var(--shadow); padding:30px}
+    header.title{text-align:center; margin-bottom:28px}
+    header.title h1{font-size:2.2rem; color:var(--brand); margin:.2rem 0}
+    header.title h2{font-size:1.2rem; letter-spacing:.12em; color:var(--ink); font-weight:700}
+
+    .logo-container{ text-align:center; margin:18px 0 10px }
+    .logo-container img{ max-width:180px; height:auto; border-radius:12px }
+    .muted{ color:var(--muted); font-size:.92rem }
+
+    h2{ color:var(--ink); border-bottom:2px solid #eee; padding-bottom:6px; margin-top:2rem }
+    h3{ color:#2c3e50; margin-top:1.2rem }
+    p{ margin:.6rem 0 }
+    ul{ margin: .2rem 0 .8rem 1.25rem }
+    li{ margin:.4rem 0 }
+    a{ color:var(--link); text-decoration:none }
+    a:hover{ text-decoration:underline }
+
+    .signature-block{ display:flex; gap:16px; justify-content:space-between; margin-top:40px; text-align:center }
+    .signature-block > div{ flex:1; background:#fafafa; border:1px dashed #ddd; border-radius:12px; padding:14px }
+    .signature-block p{ margin: 0 0 50px }
+
+    .toolbar{ position:sticky; top:0; z-index:9; background:linear-gradient(180deg, rgba(255,255,255,.96), rgba(255,255,255,.75)); backdrop-filter:saturate(140%) blur(6px); padding:10px 16px; border-bottom:1px solid #eee; display:flex; gap:10px; justify-content:flex-end }
+    .btn{ appearance:none; border:1px solid #e0e0e0; background:#fff; padding:8px 12px; border-radius:10px; cursor:pointer; font-weight:600 }
+    .btn:hover{ border-color:#cfcfcf }
+    .btn.primary{ background:var(--brand); border-color:var(--brand); color:#fff }
+
+    .card{ background:#fafafa; border:1px solid #eee; border-radius:12px; padding:14px }
+    .grid-2{ display:grid; grid-template-columns: 1fr 1fr; gap:16px }
+
+    .page-break{ page-break-before:always }
+
+    /* Responsive */
+    @media (max-width: 960px){
+      .wrap{ grid-template-columns: 1fr; }
+      nav#toc{ position:relative; max-height:none }
+      .toolbar{ position:static }
+    }
+
+    /* Print styles */
+    @media print{
+      body{ background:#fff }
+      .wrap{ display:block; margin:0; padding:0 }
+      nav#toc, .toolbar{ display:none }
+      .container{ box-shadow:none; border:0; padding:0 }
+      h2{ break-after:avoid }
+    }
+  </style>
+</head>
+<body>
+
+
+<!-- WELCOME SCREEN -->
+<div id="welcome-screen">
+  <!-- Video Background -->
+  <video autoplay muted loop playsinline id="bg-video">
+    <source src="https://d.top4top.io/m_3524v5fkl0.mp4" type="video/mp4">
+    Browser tidak mendukung video background.
+  </video>
+  <div class="overlay"></div>
+
+  <div class="welcome-box">
+    <img src="https://e.top4top.io/p_352473ukk0.png" alt="Logo RBTV" class="logo">
+    <h1>Selamat Datang 👋</h1>
+    <p>Laporan PKL RBTV Bengkulu</p>
+    <small>By Reza Purnama Jaya</small>
+    <br><br>
+    <button id="skip-btn">⛩️ Enter</button>
+  </div>
+</div>
+
+<style>
+  #welcome-screen {
+    position: fixed;
+    inset: 0;
+    background: linear-gradient(135deg, #0c339e, #1d4ed8); /* fallback kalau video gagal */
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    overflow: hidden;
+    transition: opacity 0.8s ease, visibility 0.8s ease;
+  }
+  #welcome-screen.fade-out {
+    opacity: 0;
+    visibility: hidden;
+  }
+
+  /* Video Background */
+  #bg-video {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    min-width: 100%;
+    min-height: 100%;
+    width: auto;
+    height: auto;
+    z-index: -2;
+    transform: translate(-50%, -50%);
+    object-fit: cover;
+  }
+
+  /* Overlay hitam transparan biar teks jelas */
+  .overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0.4);
+    z-index: -1;
+  }
+
+  .welcome-box {
+    text-align: center;
+    animation: zoomIn 1.5s ease;
+  }
+  .welcome-box img.logo {
+    width: 160px;
+    height: auto;
+    margin-bottom: 18px;
+    border-radius: 14px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+  }
+  .welcome-box h1 {
+    font-size: 2.8rem;
+    margin-bottom: 14px;
+  }
+  .welcome-box p {
+    font-size: 1.4rem;
+    margin-bottom: 6px;
+  }
+  .welcome-box small {
+    font-size: 1.1rem;
+  }
+  #skip-btn {
+    margin-top: 18px;
+    padding: 12px 22px;
+    border: none;
+    border-radius: 10px;
+    background: #ffffff;
+    color: #0c339e;
+    font-size: 1.1rem;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background 0.3s, color 0.3s, transform 0.2s;
+  }
+  #skip-btn:hover {
+    background: #0c339e;
+    color: #fff;
+    transform: scale(1.08);
+  }
+
+  @keyframes zoomIn {
+    from { transform: scale(0.5); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+  }
+</style>
+
+<script>
+  document.getElementById("skip-btn").addEventListener("click", function() {
+    const screen = document.getElementById("welcome-screen");
+    screen.classList.add("fade-out");
+    setTimeout(() => {
+      screen.style.display = "none";
+    }, 800);
+  });
+</script>
+
+
+
+
+
+
+
+
+<div class="toolbar">
+  <button class="btn" onclick="window.scrollTo({top:0,behavior:'smooth'})">Ke Atas</button>
+  <button class="btn primary" onclick="window.print()">Cetak / Simpan PDF</button>
+  <button class="btn" onclick="window.open('https://wa.me/6283829922256')">maker</button>
+</div>
+
+<style>
+  .toolbar {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+  }
+  .btn {
+    padding: 8px 14px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    background: #84d0dd;
+    transition: background 0.3s;
+  }
+  .btn:hover {
+    background: #bbb;
+  }
+  .btn.primary {
+    background: #007bff;
+    color: #fff;
+  }
+  .btn.primary:hover {
+    background: #0056b3;
+  }
+</style>
+
+  <div class="wrap">
+    <!-- TOC -->
+    <nav id="toc" aria-label="Daftar isi">
+      <h4>Daftar Isi</h4>
+      <a href="#cover">Halaman Judul & Pengesahan</a>
+      <a href="#kata-pengantar">Kata Pengantar</a>
+      <a href="#bab1">Bab I – Pendahuluan</a>
+      <a href="#bab2">Bab II – Tinjauan Umum RBTV</a>
+      <a href="#bab3">Bab III – Pelaksanaan PKL</a>
+      <a href="#bab4">Bab IV – Kesimpulan & Saran</a>
+      <a href="#lampiran">Lampiran</a>
+    </nav>
+
+    <!-- CONTENT -->
+    <article class="container">
+      <!-- Cover -->
+      <section id="cover">
+        <header class="title">
+          <h1>LAPORAN PRAKTIK KERJA LAPANGAN (PKL)</h1>
+        </header>
+        <div class="logo-container">
+          <img src="https://b.top4top.io/p_3523zkyf91.png" alt="Logo RBTV Bengkulu" />
+          <h3>RBTV BENGKULU</h3>
+        </div>
+        <div class="card grid-2">
+          <div>
+            <p><strong>Disusun oleh</strong></p>
+            <p><strong>Nama:</strong> Reza Purnama Jaya</p>
+            <p><strong>Kelas/Jurusan:</strong> XII / Produksi Siaran Program Televisi (PSPT)</p>
+            <p><strong>Sekolah:</strong> SMKN 5 Kepahiang</p>
+          </div>
+          <div>
+            <p><strong>Hari/tanggal:</strong> <span id="currentDateTime">--</span></p>
+
+<script>
+  function updateCurrentDateTime() {
+    const now = new Date();
+    const options = {
+      weekday: 'long',
+      day: '2-digit',
+      month: 'long',
+      year: 'numeric',
+    };
+    document.getElementById('currentDateTime').textContent =
+      new Intl.DateTimeFormat('id-ID', options).format(now);
+  }
+  updateCurrentDateTime();
+  setInterval(updateCurrentDateTime, 1000);
+</script>
+
+            <p><strong>Tempat PKL:</strong> Stasiun RBTV Bengkulu</p>
+            <div class="card" style="margin-top:14px">
+              <p><strong>Waktu Sekarang:</strong> <span id="currentTime">--:--:--</span></p>
+
+<script>
+  function updateCurrentTime() {
+    const now = new Date();
+    const options = { hour: '2-digit', minute: '2-digit', second: '2-digit' };
+    document.getElementById('currentTime').textContent =
+      new Intl.DateTimeFormat('id-ID', options).format(now);
+  }
+  updateCurrentTime();
+  setInterval(updateCurrentTime, 1000);
+</script>
+
+          </div>
+
+          </div>
+        </div>
+        
+
+        <div class="signature-block">
+          <div>
+            <p>Pembimbing Sekolah</p>
+            <strong>(Yenny Widi Palupi)</strong>
+          </div>
+          <div>
+            <p>Pembimbing RBTV</p>
+            <strong>(Yuherdi)</strong>
+          </div>
+          <div>
+            <p>Peserta PKL</p>
+            <strong>(Reza Purnama Jaya)</strong>
+          </div>
+        </div>
+      </section>
+
+      <!-- Kata Pengantar -->
+      <section id="kata-pengantar" class="page-break">
+        <h2>Kata Pengantar</h2>
+        <p>Puji syukur ke hadirat Tuhan Yang Maha Esa, laporan Praktik Kerja Lapangan (PKL) di <strong>RBTV Bengkulu</strong> ini dapat diselesaikan. Laporan ini disusun sebagai salah satu syarat penilaian kegiatan PKL serta dokumentasi pembelajaran di dunia industri Editing.</p>
+        <p>Terima kasih kepada pihak sekolah, pembimbing lapangan RBTV, dan seluruh kru yang telah membimbing selama pelaksanaan PKL.</p>
+      </section>
+
+      <!-- BAB I -->
+      <section id="bab1" class="page-break">
+        <h2>Bab I – Pendahuluan</h2>
+
+        <h3>Latar Belakang</h3>
+        <ul>
+          <li>Kebutuhan menjembatani kesenjangan antara teori perkuliahan/sekolah dengan praktik langsung di industri, serta membekali peserta dengan keterampilan, pengetahuan, dan pengalaman nyata yang belum sepenuhnya didapat di lingkungan akademis.</li>
+        </ul>
+
+        <h3>Maksud dan Tujuan PKL di RBTV</h3>
+        <ul>
+          <li>Memperoleh pengalaman kerja nyata, mengaplikasikan teori ke praktik penyiaran, mengasah keterampilan profesional, menumbuhkan kepercayaan diri dan tanggung jawab, serta menyiapkan diri menjadi SDM yang kompeten di dunia kerja.</li>
+        </ul>
+
+        <h3>Kegunaan PKL bagi Siswa, Sekolah, dan RBTV</h3>
+        <ul>
+          <li>Bagi siswa: meningkatkan keterampilan & etos kerja melalui pengalaman nyata.</li>
+          <li>Bagi sekolah: memperkuat kerja sama dengan industri dan meningkatkan reputasi.</li>
+          <li>Bagi RBTV: memperoleh tenaga muda siap pakai yang membantu pekerjaan di bawah supervisi.</li>
+        </ul>
+
+        <h3>Tempat PKL</h3>
+        <p>Stasiun <strong>RBTV (Rakyat Bengkulu Televisi)</strong> Bengkulu.</p>
+
+        <h3>Jadwal PKL</h3>
+        <div class="card" style="margin-top:14px">
+          <h3>Jadwal Kegiatan PKL</h3>
+          <ul>
+            <li><b>Senin:</b> Briefing redaksi & asistensi pra-produksi, fokus pemahaman konsep program.</li>
+            <li><b>Selasa:</b> Mempersiapkan & mengorganisir materi footage.</li>
+            <li><b>Kamis:</b> Logging (mencatat poin penting) & rough cut (penyuntingan awal).</li>
+            <li><b>Jumat:</b> Fine cut (penyuntingan detail) & mixing audio.</li>
+            <li><b>Sabtu:</b> Quality Control (QC) paket tayang & pengarsipan materi.</li>
+            <li><b>Minggu:</b> Standby live broadcast / talkshow (jika ada).</li>
+          </ul>
+        </div>
+        
+      </section>
+
+      <!-- BAB II -->
+      <section id="bab2" class="page-break">
+        <h2>Bab II – Tinjauan Umum RBTV Bengkulu</h2>
+
+        <h3>Sejarah RBTV Bengkulu</h3>
+        <ul>
+          <li>RBTV adalah stasiun televisi lokal pertama di Kota Bengkulu, berdiri tahun 2009 dan bagian dari Jawa Pos Group. Awalnya menayangkan program pendidikan, kampanye sosial, dan informasi lokal yang aktual.</li>
+        </ul>
+
+        <h3>Visi, Misi, dan Slogan</h3>
+        <ul>
+          <li><strong>Visi:</strong> Menjadi media pilihan masyarakat untuk mendidik dan memberikan informasi secara netral.</li>
+          <li><strong>Misi:</strong> Mengedukasi dan menyajikan informasi yang netral serta relevan bagi masyarakat Bengkulu.</li>
+          <li><strong>Slogan:</strong> <em>RBTV Camkoha</em>.</li>
+        </ul>
+
+        <h3>Struktur Organisasi</h3>
+        <p>Diisi sesuai struktur organisasi RBTV (Direktur, Pemred, Produser, Reporter, Kameramen, Editor, Teknisi, dll.).</p>
+       <div class="logo-container" style="text-align:center;">
+  <img src="https://l.top4top.io/p_3523qg7ev1.jpg" 
+       alt="Logo RBTV Bengkulu" 
+       style="width:500px; max-width:100%;" />
+
+</div>
+
+
+<style>
+  .photo-grid {
+    display: flex;
+    gap: 30px; /* jarak antar foto, bisa diatur */
+  }
+  .photo-grid img {
+    width: 500px;              /* lebar foto */
+    aspect-ratio: 4 / 3;       /* biar rasio tetap 4:3 */
+    object-fit: cover;         /* isi penuh (potong bagian lebih) */
+    border-radius: 10px;       /* sudut melengkung */
+  }
+</style>
+
+        <h3>Program Siaran & Kegiatan</h3>
+        <ul>
+          <li>Berita harian: <em>Laporan RBTV News Camkoha</em> (Pagi, Siang, Sore, Malam).</li>
+          <li>Hiburan & budaya: <em>Musik Asik</em>, <em>Dangdut Camkoha.</li>
+          <li>Talkshow live: <em>Halo Bengkulu</em>, wawancara tokoh publik.</li>
+          <li>Aktif di YouTube “RBTV Makin Camkoha” dan portal berita <a href="https://rbtv.disway.id" target="_blank" rel="noopener">rbtv.disway.id</a>.</li>
+        </ul>
+
+        <h3>Tugas & Fungsi RBTV</h3>
+        <ul>
+          <li>Melayani masyarakat Bengkulu melalui siaran informatif, edukatif, dan menghibur; menjadi sumber berita tepercaya; mempromosikan budaya & kearifan lokal; serta berperan dalam pembangunan daerah.</li>
+        </ul>
+      </section>
+
+      <!-- BAB III -->
+      <section id="bab3" class="page-break">
+        <h2>Bab III – Pelaksanaan PKL</h2>
+
+        <h3>Bidang Kerja</h3>
+        <p><strong>Editing Video</strong>.</p>
+
+        <h3>Pelaksanaan Kerja</h3>
+        <p>PKL/Praktik Kerja Lapangan dilaksanakan dengan terlibat pada alur produksi berita: pra-produksi, pengambilan gambar, logging, penyuntingan (cut to cut, penataan audio, teks grafis), hingga finalisasi paket tayang.</p>
+
+        <h3>Kendala & Cara Mengatasinya</h3>
+        <ul>
+          <li>Adaptasi perangkat & software: mengatasi dengan belajar mandiri, bertanya pada editor senior, dan latihan rutin.</li>
+          <li>Manajemen waktu deadline tayang: menggunakan to-do harian dan koordinasi dengan produser.</li>
+        </ul>
+      </section>
+
+      <!-- BAB IV -->
+      <section id="bab4" class="page-break">
+        <h2>Bab IV – Kesimpulan & Saran</h2>
+
+        <h3>Kesimpulan</h3>
+        <ul>
+          <li>RBTV Bengkulu adalah stasiun TV lokal yang menayangkan berita (<em>Laporan RBTV/Laporan Malam/Laporan Sore/Laporan Daerah/Perkaro</em>), talkshow live (<em>Halo Bengkulu</em>), dan aktif di YouTube serta portal <a href="https://rbtv.disway.id" target="_blank" rel="noopener">rbtv.disway.id</a> sebagai media informasi masyarakat.</li>
+        </ul>
+
+        <h3>Saran</h3>
+        <ul>
+          <li><strong>Untuk sekolah:</strong> tingkatkan pembekalan praktis (software editing standar industri) dan komunikasi penempatan dengan RBTV.</li>
+          <li><strong>Untuk siswa PKL:</strong> kuasai dasar-dasar editing, bersikap proaktif, dan asah soft skill komunikasi & etos kerja.</li>
+          <li><strong>Untuk RBTV:</strong> susun program pembimbingan lebih terstruktur dengan target tugas yang jelas; pertimbangkan peningkatan fasilitas untuk menunjang produktivitas peserta PKL.</li>
+        </ul>
+      </section>
+
+      <!-- Lampiran -->
+      <section id="lampiran" class="page-break">
+        <h2>Lampiran</h2>
+         <div class="card" style="margin-top:14px">
+         <h3>Jadwal Kegiatan PKL</h3>
+         <ul>
+         <li><b>Senin:</b> Briefing redaksi & asistensi pra-produksi, fokus pemahaman konsep program.</li>
+         <li><b>Selasa:</b> Mempersiapkan & mengorganisir materi footage.</li>
+         <li><b>Kamis:</b> Logging (mencatat poin penting) & rough cut (penyuntingan awal).</li>
+         <li><b>Jumat:</b> Fine cut (penyuntingan detail) & mixing audio.</li>
+         <li><b>Sabtu:</b> Quality Control (QC) paket tayang & pengarsipan materi.</li>
+         <li><b>Minggu:</b> Standby live broadcast / talkshow (jika ada).</li>
+         </ul>
+       </div>
+
+<div class="card" style="margin-top:14px">
+  <h3>Foto Dokumentasi</h3>
+  <div class="photo-grid">
+    <img src="https://c.termai.cc/i75/gBO.jpg" alt="Foto 1" />
+    <img src="https://c.top4top.io/p_3523bamkp1.png" alt="Foto 2" />
+  </div>
+  <p class="muted">photos of activities & places.</p>
+</div>
+
+<style>
+  .photo-grid {
+    display: flex;
+    gap: 30px; /* jarak antar foto, bisa diatur */
+  }
+  .photo-grid img {
+    width: 300px;              /* lebar foto */
+    aspect-ratio: 4 / 3;       /* biar rasio tetap 4:3 */
+    object-fit: cover;         /* isi penuh (potong bagian lebih) */
+    border-radius: 10px;       /* sudut melengkung */
+  }
+</style>
+
+
+
+      </section>
+
+      <footer style="margin-top:40px" class="muted">
+        <p>© 2025 – Laporan PKL RBTV Bengkulu, By Reza.</p>
+      </footer>
+    </article>
+  </div>
+
+  <script>
+    // Highlight link aktif pada TOC saat scroll
+    const links=[...document.querySelectorAll('#toc a')];
+    const sections=links.map(a=>document.querySelector(a.getAttribute('href'))).filter(Boolean);
+    const onScroll=()=>{
+      const pos=window.scrollY + 110;
+      let activeIndex=0;
+      sections.forEach((sec,i)=>{ if(sec.offsetTop<=pos) activeIndex=i; });
+      links.forEach((a,i)=>a.classList.toggle('active', i===activeIndex));
+    };
+    document.addEventListener('scroll', onScroll, {passive:true});
+    onScroll();
+  </script>
+</body>
+</html>
